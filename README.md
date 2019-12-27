@@ -10,6 +10,10 @@ A lamp stack vagrant box using docker containers.
 * Mysql 8.0
 * Node 12.14
 
+## Vagrant
+
+To use this box, you must first have vagrant up and running. Download the example directory and run `vagrant up`. Then, visit 192.168.55.10/test.php from your web browser.
+
 ## Packer
 
 To build the box with packer, run the following command:
