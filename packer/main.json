@@ -1,0 +1,21 @@
+{
+  "builders": [
+    {
+      "communicator": "ssh",
+      "source_path": "ubuntu/bionic64",
+      "provider": "virtualbox",
+      "add_force": true,
+      "type": "vagrant"
+    }
+  ],
+  "provisioners": [
+  {
+    "type": "shell",
+    "script": "../lamp.sh"
+  }],
+  "post-processors": [{
+    "type": "vagrant",
+    "compression_level": "6",
+    "output": "meech-ward-lamp{{.Provider}}.box"
+  }]
+}
