@@ -10,4 +10,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder HOST_DIR, VM_DIR
 
+  config.trigger.after :up, :reload do |trigger|
+    trigger.info = "Restarting Apache"
+    trigger.run_remote = {inline: "docker restart apache-server"}
+  end
+
 end
