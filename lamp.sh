@@ -5,6 +5,8 @@ NODE_VERSION="12.14.0"
 
 sudo apt update
 
+sudo apt install -y zip
+
 echo "Installing nvm and node"
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash
@@ -40,7 +42,7 @@ sudo systemctl status docker | cat
 
 sudo usermod -aG docker ${USER}
 
-newgrp docker
+# newgrp docker
 
 echo "Docker Installed"
 
@@ -94,6 +96,35 @@ sudo docker restart apache-server
 
 echo "Done setting up containers"
 
+
+# PHP
+echo "Installing PHP"
+
+sudo add-apt-repository -y ppa:ondrej/php
+sudo apt update
+sudo apt install -y php-cli php-xdebug php-mbstring php-xml
+
+EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)"
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+ACTUAL_SIGNATURE="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]
+then
+    >&2 echo 'ERROR: Invalid installer signature'
+    rm composer-setup.php
+    exit 1
+fi
+php composer-setup.php --quiet
+RESULT=$?
+rm composer-setup.php
+sudo mv composer.phar /usr/local/bin/composer
+
+wget -O phpunit https://phar.phpunit.de/phpunit-8.phar
+chmod +x phpunit
+mkdir /home/vagrant/bin
+mv phpunit /home/vagrant/bin
+echo "export PATH=/home/vagrant/bin:$PATH" >> /home/vagrant/.bashrc
+
+echo "Done Installing PHP"
 
 
 echo $'
